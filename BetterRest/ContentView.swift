@@ -11,7 +11,11 @@ import SwiftUI
 
 
 struct ContentView: View {
+    // displaying an average time of wakeup in the datePicker
+    // for this to work it has to be a STATIC VAR ***
     @State private var wakeUp = defaultWakeTime
+    
+    
     @State private var sleepAmount = 8.0
     @State private var coffeeAmount = 1
     
@@ -20,38 +24,62 @@ struct ContentView: View {
     @State private var showingAlert = false
     
     
+    // STATIC VAR
     static var defaultWakeTime: Date {
-        var components = DateComponents()
-        components.hour = 7
-        components.minute = 0
+        var components = DateComponents() // Using components
+        components.hour = 7 // adding hour component
+        components.minute = 0 // adding minute component
+        // return the current calendar date from the component added previously. If it doesn't return anything then RETURN current time
         return Calendar.current.date(from: components) ?? .now
     }
+    
+    
+    
     var body: some View {
         NavigationStack{
-            Form{
-            
+            Form{ // adding a standard form to fix the position of the every element inside
                 VStack(alignment: .leading, spacing:0){
                     // ========================= Date Picker for wake up time
+                    
+                    // Display question
                     Text("When do you want to wake up?")
                         .font(.headline)
                     
+                    // Display Options, with the wakeUp average time showing.
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                         .labelsHidden()
                 }
                 VStack(alignment: .leading, spacing:0){
                     // ========================= Stepper for amount of sleep
+                    
+                    // Display Question
                     Text("Desired amount of sleep")
                         .font(.headline)
                     
+                    // Display a counter option to select how many hours are desired for sleeping
+                    // displaying average var
+                    // steps = amount of range you want to be scale
                     Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
                 }
                     // ========================= Stepper for coffee daily amount
-                VStack(alignment: .leading, spacing:0){
+                HStack{
                     
+                    
+                    // Display question
                     Text("Daily coffee intake")
                         .font(.headline)
                     
-                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in : 1...20)
+                    
+                    // Display a counter option to select how many cups of coffee the user has consumed
+                    // displaying the average amount Var
+//                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in : 1...20)
+                    
+                    Picker("", selection: $coffeeAmount){
+                        ForEach(0..<21){number in
+                            Text("\(number)")}
+                    }
+                    .pickerStyle(.menu)
+                    
                     // ^[\(coffeeAmount) cup](inflect: true) reads as
                     // SwiftUI has to update from single to plural depending on the variable output. If 1 then "cup", else if 2 or more then "cups"
                 }
@@ -63,9 +91,11 @@ struct ContentView: View {
                     Spacer()
                 }
             }
+            // Main title
             .navigationTitle("BetterRest")
             
             // =========================  Calculate button
+            // Button that invokes the func
             .toolbar {
                 Button("Calculate", action: calculateBedTime)
             }
@@ -75,6 +105,7 @@ struct ContentView: View {
             } message: {
                 Text(alertMessage) // Displaying the alert message
             }
+            
         }
         
     }
