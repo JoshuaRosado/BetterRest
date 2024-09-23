@@ -11,7 +11,7 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @State private var wakeUp = Date.now
+    @State private var wakeUp = defaultWakeTime
     @State private var sleepAmount = 8.0
     @State private var coffeeAmount = 1
     
@@ -19,38 +19,51 @@ struct ContentView: View {
     @State private var alertMessage = ""
     @State private var showingAlert = false
     
+    
+    static var defaultWakeTime: Date {
+        var components = DateComponents()
+        components.hour = 7
+        components.minute = 0
+        return Calendar.current.date(from: components) ?? .now
+    }
     var body: some View {
         NavigationStack{
-            ZStack{
+            Form{
             
-                VStack{
+                VStack(alignment: .leading, spacing:0){
                     // ========================= Date Picker for wake up time
                     Text("When do you want to wake up?")
                         .font(.headline)
                     
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                         .labelsHidden()
-                    
+                }
+                VStack(alignment: .leading, spacing:0){
                     // ========================= Stepper for amount of sleep
                     Text("Desired amount of sleep")
                         .font(.headline)
                     
                     Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
-                    
+                }
                     // ========================= Stepper for coffee daily amount
+                VStack(alignment: .leading, spacing:0){
+                    
                     Text("Daily coffee intake")
                         .font(.headline)
                     
-                    Stepper("\(coffeeAmount) cup(s)", value: $coffeeAmount, in : 1...20).background(.thinMaterial)
+                    Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in : 1...20)
+                    // ^[\(coffeeAmount) cup](inflect: true) reads as
+                    // SwiftUI has to update from single to plural depending on the variable output. If 1 then "cup", else if 2 or more then "cups"
+                }
+                HStack(alignment: .center){
+                    Spacer()
+                    Image(systemName: "moon").font(.system(size: 60)).foregroundStyle(.blue.opacity(0.1))
+                    Spacer()
+                    Text("Get some rest").bold().fontDesign(.rounded).foregroundStyle(.blue.opacity(0.3))
+                    Spacer()
                 }
             }
-            .padding(60)
-            
-            
-            
-            
             .navigationTitle("BetterRest")
-            Image(systemName: "moon").font(.system(size: 60))
             
             // =========================  Calculate button
             .toolbar {
