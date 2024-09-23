@@ -21,28 +21,36 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack{
-            VStack{
-                // ========================= Date Picker for wake up time
-                Text("When do you want to wake up?")
-                    .font(.headline)
-                
-                DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                
-                // ========================= Stepper for amount of sleep
-                Text("Desired amount of sleep")
-                    .font(.headline)
-                
-                Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
-                
-                // ========================= Stepper for coffee daily amount
-                Text("Daily coffee intake")
-                    .font(.headline)
-                
-                Stepper("\(coffeeAmount) cup(s)", value: $coffeeAmount, in : 1...20)
+            ZStack{
+            
+                VStack{
+                    // ========================= Date Picker for wake up time
+                    Text("When do you want to wake up?")
+                        .font(.headline)
+                    
+                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                    
+                    // ========================= Stepper for amount of sleep
+                    Text("Desired amount of sleep")
+                        .font(.headline)
+                    
+                    Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+                    
+                    // ========================= Stepper for coffee daily amount
+                    Text("Daily coffee intake")
+                        .font(.headline)
+                    
+                    Stepper("\(coffeeAmount) cup(s)", value: $coffeeAmount, in : 1...20).background(.thinMaterial)
+                }
             }
+            .padding(60)
+            
+            
+            
             
             .navigationTitle("BetterRest")
+            Image(systemName: "moon").font(.system(size: 60))
             
             // =========================  Calculate button
             .toolbar {
